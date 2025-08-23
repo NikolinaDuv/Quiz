@@ -243,6 +243,7 @@
 // }
 
 // export default Quiz;
+//useRef za obojanje odgovora,useEffect->za localStorage
 import React, { useRef, useState, useEffect } from 'react'
 import './Quiz.css';
 import { data } from '../../assets/data';
@@ -254,12 +255,14 @@ const Quiz = () => {
     let [result, setResult] = useState(false);
     let [lock, setLock] = useState(false);
     let [start, setStart] = useState(false);
-
+    //trenutni korisnik
     let [user, setUser] = useState(null);
+    //svi registirani korisnici
     let [users, setUsers] = useState([]);
+    //prikazivanje login ili registar forme
     let [showLogin, setShowLogin] = useState(true);
     let [error, setError] = useState("");
-
+//provjerava jeli postoji već  sačuvani korisnik
     useEffect(() => {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
@@ -283,7 +286,7 @@ const Quiz = () => {
             localStorage.setItem("user", JSON.stringify({ username }));
             setError("");
         } else {
-            setError("Pogrešan username ili password, ili se prvo registrujte.");
+            setError("Pogrešan username ili password.");
         }
     };
 
@@ -294,14 +297,14 @@ const Quiz = () => {
 
         const exists = users.find(u => u.username === username);
         if (exists) {
-            setError("Korisnik već postoji, ulogujte se.");
+            setError("Korisnik već postoji.");
             return;
         }
 
         const newUsers = [...users, { username, password }];
         setUsers(newUsers);
         localStorage.setItem("users", JSON.stringify(newUsers));
-        setError("Registracija uspješna! Sada se ulogujte.");
+        setError("Registracija uspješna!");
         setShowLogin(true);
     };
 
@@ -312,6 +315,7 @@ const Quiz = () => {
     let option_array = [Option1, Option2, Option3, Option4];
 
     const checkAns = (e, ans) => {
+        //ako još nije odgovoreno
         if (lock === false) {
             if (question.ans === ans) {
                 e.target.classList.add("correct");
