@@ -4,7 +4,6 @@ import cors from 'cors';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 
-
 dotenv.config();
 
 const app = express();
@@ -13,11 +12,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-
+// Spajanje na MongoDB
 mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log("Povezano s MongoDB bazom: quiz_db"))
+    .then(() => console.log("Povezano s MongoDB bazom"))
     .catch(err => console.error("Greška pri spajanju na MongoDB:", err));
-
 
 const UserSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
@@ -25,12 +23,11 @@ const UserSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', UserSchema);
 
+// VAŽNO: Dodajemo /api ispred ruta da se podudara s onim iz Quiz.jsx i vercel.json
 // Ruta za Registraciju
-app.post('/register', async (req, res) => {
+app.post('/api/register', async (req, res) => {
     try {
         const { username, password } = req.body;
-        
-        // Provjera postoji li korisnik
         const exists = await User.findOne({ username });
         if (exists) {
             return res.status(400).json({ error: "Korisnik već postoji." });
@@ -46,7 +43,8 @@ app.post('/register', async (req, res) => {
     }
 });
 
-app.post('/login', async (req, res) => {
+// Ruta za Login
+app.post('/api/login', async (req, res) => {
     try {
         const { username, password } = req.body;
         const user = await User.findOne({ username });
@@ -61,5 +59,11 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// Ovo ostavljamo za lokalni rad, ali Vercel će koristiti export
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server radi na portu ${PORT}`));
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => console.log(`Server radi na portu ${PORT}`));
+}
+
+// Pošto koristiš "import" na vrhu, moraš koristiti "export default" umjesto module.exports
+export default app;
