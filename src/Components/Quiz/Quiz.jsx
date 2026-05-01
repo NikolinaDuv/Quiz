@@ -20,7 +20,7 @@ const Quiz = () => {
         }
     }, []);
 
-    // LOGIN - Putanja promijenjena na /api/login
+    
     const handleLogin = async (e) => {
         e.preventDefault();
         const username = e.target.username.value;
@@ -46,7 +46,7 @@ const Quiz = () => {
         }
     };
 
-    // REGISTER - Putanja promijenjena na /api/register
+    
     const handleRegister = async (e) => {
         e.preventDefault();
         const username = e.target.username.value;
