@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react';
 import './Quiz.css';
 import { data } from '../../assets/data';
 
@@ -20,14 +20,14 @@ const Quiz = () => {
         }
     }, []);
 
-    // LOGIN
+    // LOGIN - Putanja promijenjena na /api/login
     const handleLogin = async (e) => {
         e.preventDefault();
         const username = e.target.username.value;
         const password = e.target.password.value;
 
         try {
-            const response = await fetch("http://localhost:5000/login", {
+            const response = await fetch("/api/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password })
@@ -46,14 +46,14 @@ const Quiz = () => {
         }
     };
 
-    // REGISTER
+    // REGISTER - Putanja promijenjena na /api/register
     const handleRegister = async (e) => {
         e.preventDefault();
         const username = e.target.username.value;
         const password = e.target.password.value;
 
         try {
-            const response = await fetch("http://localhost:5000/register", {
+            const response = await fetch("/api/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password })
@@ -96,7 +96,6 @@ const Quiz = () => {
         if (lock === true) {
             if (index === data.length - 1) {
                 setResult(true);
-                // Ovdje bi mogla dodati fetch za slanje score-a na backend ako želiš spremanje rezultata
                 return 0;
             }
             const nextIndex = index + 1;
@@ -123,7 +122,7 @@ const Quiz = () => {
     const logout = () => {
         setUser(null);
         localStorage.removeItem("user");
-        reset(); // Resetiraj i kviz stanje pri logoutu
+        reset();
     };
 
     return (
@@ -158,7 +157,7 @@ const Quiz = () => {
                         <span>Welcome, <strong>{user.username}</strong>!</span>
                     </div>
                     {!start ? (
-                        <div className="result-screen"> {/* Koristimo result-screen stil za start */}
+                        <div className="result-screen">
                             <button onClick={() => setStart(true)} className="start-btn">Start Quiz</button>
                             <button className="logout-btn" onClick={logout}>Logout</button>
                         </div>
@@ -179,7 +178,7 @@ const Quiz = () => {
                             ) : (
                                 <div className="result-screen">
                                     <h2>You scored {score} of {data.length}</h2>
-                                    <div className="result-actions"> {/* NOVO: Kontejner za gumbe */}
+                                    <div className="result-actions">
                                         <button onClick={reset} className="reset-btn">Reset</button>
                                         <button className="logout-btn" onClick={logout}>Logout</button>
                                     </div>
